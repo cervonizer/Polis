@@ -1,32 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="css/style.css" />
     <title>Político 1 - Propostas e Formação</title>
 </head>
 <body>
     <header>
-        <h1>Político 1 - Propostas e Formação</h1>
+        <h1>Político 1</h1>
+        <p>Propostas e Formação</p>
         <nav>
-            <a href="index.html">Home</a>
+            <a href="index.html">Início</a>
         </nav>
     </header>
+
     <main>
-        <!-- Caminho atualizado para a imagem do político 1 -->
-        <img src="imagens/Politico1.png" alt="Imagem de perfil do Político 1" class="perfil-politico">
+        <img src="img/Politico1.png" alt="Imagem de perfil do Político 1" class="perfil-politico" />
+
+        <!-- Filtro de propostas -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <label for="filtro">Filtrar por tipo de proposta:</label>
+            <select id="filtro" onchange="filtrarPropostas()">
+                <option value="todas">Todas</option>
+                <option value="cumpridas">Cumpridas</option>
+                <option value="andamento">Em andamento</option>
+                <option value="promessas">Promessas</option>
+            </select>
+        </div>
+
+        <!-- Barra de progresso -->
+        <section id="progresso">
+            <h2>Progresso Geral</h2>
+            <div style="background: #eee; border-radius: 20px; height: 20px; width: 100%; max-width: 400px; margin: auto;">
+                <div style="background: #bc2323; height: 100%; border-radius: 20px; width: 90%;"></div>
+            </div>
+            <p style="text-align: center; margin-top: 5px;">90% das propostas foram cumpridas</p>
+        </section>
 
         <section id="formacao">
             <h2>Formação Acadêmica</h2>
             <ul>
-                <li>Bacharelado em Administração Pública - Universidade de São Paulo (USP)</li>
-                <li>Especialização em Gestão Pública - Fundação Getúlio Vargas (FGV)</li>
-                <li>Mestrado em Administração e Políticas Públicas - Universidade de Harvard</li>
+                <li>Bacharelado em Administração Pública – Universidade de São Paulo (USP)</li>
+                <li>Especialização em Gestão Pública – Fundação Getúlio Vargas (FGV)</li>
+                <li>Mestrado em Administração e Políticas Públicas – Universidade de Harvard</li>
             </ul>
         </section>
-        
-        <section id="propostas">
+
+        <section id="propostas-cumpridas" class="grupo-proposta cumpridas">
             <h2>Propostas Cumpridas</h2>
             <ul>
                 <li>Construção de 10 novas creches municipais</li>
@@ -34,19 +55,80 @@
                 <li>Redução da carga tributária para microempreendedores</li>
                 <li>Criação de parques urbanos em áreas abandonadas</li>
                 <li>Investimento em capacitação profissional para jovens</li>
-                <li>Ampliação do acesso à saúde básica em regiões periféricas</li>
+                <li>Amplição do acesso à saúde básica em regiões periféricas</li>
                 <li>Implantação de energia solar em prédios públicos</li>
                 <li>Reforma e modernização de bibliotecas municipais</li>
                 <li>Melhoria na infraestrutura de transporte público</li>
             </ul>
+        </section>
+
+        <section id="propostas-andamento" class="grupo-proposta andamento">
             <h2>Proposta em Andamento</h2>
             <ul>
                 <li>Projeto de construção de moradias populares</li>
             </ul>
         </section>
+
+        <section id="promessas" class="grupo-proposta promessas">
+            <h2>Promessas</h2>
+
+            <!-- Barra de progresso de promessas (automática via JS) -->
+            <div id="barra-promessas" style="background: #eee; border-radius: 20px; height: 20px; width: 100%; max-width: 400px; margin: auto;">
+                <div id="preenchimento-promessas" style="background: #4caf50; height: 100%; border-radius: 20px; width: 0%; transition: width 0.6s;"></div>
+            </div>
+            <p id="texto-promessas" style="text-align: center; margin-top: 5px;"></p>
+
+            <ul id="lista-promessas">
+                <li>Implantação de energia solar em prédios públicos</li>
+                <li>Melhoria na infraestrutura de transporte público</li>
+            </ul>
+        </section>
+
+        <div style="text-align:center; margin-top: 2rem;">
+            <a href="index.html">⬅ Voltar para a página inicial</a>
+        </div>
     </main>
+
     <footer>
-        <p>&copy; 2024 Comparador de Políticos. Todos os direitos reservados.</p>
+        <p>© 2025 Polis. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+    function filtrarPropostas() {
+        const valor = document.getElementById("filtro").value;
+        const grupos = document.querySelectorAll(".grupo-proposta");
+
+        grupos.forEach(grupo => {
+            if (valor === "todas") {
+                grupo.style.display = "block";
+            } else if (grupo.classList.contains(valor)) {
+                grupo.style.display = "block";
+            } else {
+                grupo.style.display = "none";
+            }
+        });
+    }
+
+    function calcularProgressoPromessas() {
+        const listaPromessas = Array.from(document.querySelectorAll("#lista-promessas li")).map(li => li.textContent.trim().toLowerCase());
+        const listaCumpridas = Array.from(document.querySelectorAll("#propostas-cumpridas li")).map(li => li.textContent.trim().toLowerCase());
+
+        let cumpridas = 0;
+
+        listaPromessas.forEach(promessa => {
+            if (listaCumpridas.includes(promessa)) {
+                cumpridas++;
+            }
+        });
+
+        const total = listaPromessas.length;
+        const porcentagem = total > 0 ? (cumpridas / total * 100).toFixed(1) : 0;
+
+        document.getElementById("preenchimento-promessas").style.width = porcentagem + "%";
+        document.getElementById("texto-promessas").textContent = `${cumpridas} de ${total} promessas foram cumpridas`;
+    }
+
+    calcularProgressoPromessas();
+    </script>
 </body>
 </html>
