@@ -1,36 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="css/style.css" />
     <title>Político 2 - Propostas e Formação</title>
 </head>
 <body>
     <header>
-        <h1>Político 2 - Propostas e Formação</h1>
+        <h1>Político 2</h1>
+        <p>Propostas e Formação</p>
         <nav>
-            <a href="index.html">Home</a>
+            <a href="index.html">Início</a>
         </nav>
     </header>
+
     <main>
-        <!-- Caminho atualizado para a imagem do político 2 -->
-        <img src="imagens/Politico2.png" alt="Imagem de perfil do Político 2" class="perfil-politico">
+        <img src="img/Politico2.png" alt="Imagem de perfil do Político 2" class="perfil-politico" />
+
+        <!-- Filtro de propostas -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <label for="filtro">Filtrar por tipo de proposta:</label>
+            <select id="filtro" onchange="filtrarPropostas()">
+                <option value="todas">Todas</option>
+                <option value="cumpridas">Cumpridas</option>
+                <option value="andamento">Em andamento</option>
+                <option value="nao-cumpridas">Não cumpridas</option>
+                <option value="promessas">Promessas</option>
+            </select>
+        </div>
+
+        <!-- Barra de progresso -->
+        <section id="progresso">
+            <h2>Progresso Geral</h2>
+            <div style="background: #eee; border-radius: 20px; height: 20px; width: 100%; max-width: 400px; margin: auto;">
+                <div style="background: #bc2323; height: 100%; border-radius: 20px; width: 37.5%;"></div>
+            </div>
+            <p style="text-align: center; margin-top: 5px;">37,5% das propostas foram cumpridas</p>
+        </section>
 
         <section id="formacao">
             <h2>Formação Acadêmica</h2>
             <ul>
-                <li>Curso Técnico em Administração - Centro de Ensino Comunitário</li>
+                <li>Curso Técnico em Administração – Centro de Ensino Comunitário</li>
             </ul>
         </section>
-        
-        <section id="propostas">
+
+        <section id="propostas-cumpridas" class="grupo-proposta cumpridas">
             <h2>Propostas Cumpridas</h2>
             <ul>
                 <li>Revitalização de praças públicas</li>
                 <li>Distribuição de material escolar para estudantes carentes</li>
                 <li>Programa de alimentação em escolas municipais</li>
             </ul>
+        </section>
+
+        <section id="propostas-andamento" class="grupo-proposta andamento">
             <h2>Propostas em Andamento</h2>
             <ul>
                 <li>Construção de unidades básicas de saúde</li>
@@ -39,15 +64,76 @@
                 <li>Desenvolvimento de projetos de coleta seletiva de lixo</li>
                 <li>Projeto de acessibilidade em edifícios públicos</li>
             </ul>
+        </section>
+
+        <section id="propostas-nao-cumpridas" class="grupo-proposta nao-cumpridas">
             <h2>Propostas Não Cumpridas (Prazo Expirado)</h2>
             <ul>
                 <li>Construção de uma nova ponte para melhorar o trânsito</li>
                 <li>Criação de um centro cultural comunitário</li>
             </ul>
         </section>
+
+        <section id="promessas" class="grupo-proposta promessas">
+            <h2>Promessas</h2>
+
+            <!-- Barra de progresso de promessas (automática via JS) -->
+            <div id="barra-promessas" style="background: #eee; border-radius: 20px; height: 20px; width: 100%; max-width: 400px; margin: auto;">
+                <div id="preenchimento-promessas" style="background: #4caf50; height: 100%; border-radius: 20px; width: 0%; transition: width 0.6s;"></div>
+            </div>
+            <p id="texto-promessas" style="text-align: center; margin-top: 5px;"></p>
+
+            <ul id="lista-promessas">
+                <li>Criação de um centro cultural comunitário</li>
+                <li>Implantação de ciclovias em bairros residenciais</li>
+            </ul>
+        </section>
+
+        <div style="text-align:center; margin-top: 2rem;">
+            <a href="index.html">⬅ Voltar para a página inicial</a>
+        </div>
     </main>
+
     <footer>
-        <p>&copy; 2024 Comparador de Políticos. Todos os direitos reservados.</p>
+        <p>© 2025 Polis. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+    function filtrarPropostas() {
+        const valor = document.getElementById("filtro").value;
+        const grupos = document.querySelectorAll(".grupo-proposta");
+
+        grupos.forEach(grupo => {
+            if (valor === "todas") {
+                grupo.style.display = "block";
+            } else if (grupo.classList.contains(valor)) {
+                grupo.style.display = "block";
+            } else {
+                grupo.style.display = "none";
+            }
+        });
+    }
+
+    function calcularProgressoPromessas() {
+        const listaPromessas = Array.from(document.querySelectorAll("#lista-promessas li")).map(li => li.textContent.trim().toLowerCase());
+        const listaCumpridas = Array.from(document.querySelectorAll("#propostas-cumpridas li")).map(li => li.textContent.trim().toLowerCase());
+
+        let cumpridas = 0;
+
+        listaPromessas.forEach(promessa => {
+            if (listaCumpridas.includes(promessa)) {
+                cumpridas++;
+            }
+        });
+
+        const total = listaPromessas.length;
+        const porcentagem = total > 0 ? (cumpridas / total * 100).toFixed(1) : 0;
+
+        document.getElementById("preenchimento-promessas").style.width = porcentagem + "%";
+        document.getElementById("texto-promessas").textContent = `${cumpridas} de ${total} promessas foram cumpridas`;
+    }
+
+    calcularProgressoPromessas();
+    </script>
 </body>
 </html>
